@@ -21,6 +21,8 @@ ActiveRecord::Schema.define do
   end
 
   create_table :failures do |t|
+    t.string :valid_from
+    t.string :valid_to
   end
 end
 

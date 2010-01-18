@@ -43,9 +43,13 @@ class TestSlugify < Test::Unit::TestCase
 
     context "with missing columns" do
       should "raise an exception" do
-        #assert_raised ... do
-        #  Failure.slugify
-        #end
+        assert_raises(Slugify::MissingColumnError) do
+          Failure.slugify :blech, :to => :valid_to
+        end
+
+        assert_raises(Slugify::MissingColumnError) do
+          Failure.slugify :valid_from, :to => :blaugh
+        end
       end
     end
   end
@@ -108,7 +112,7 @@ class TestSlugify < Test::Unit::TestCase
     end
   end
 
-  context "calling #slugify! instance method" do
+  context "calling #slugify! (bang) instance method" do
     should "force a reload" do
       @page.slug = "page"
       @user.slug = "user"
