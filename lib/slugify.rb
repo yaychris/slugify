@@ -6,45 +6,35 @@ module Slugify
       :to      => :slug
     })
 
-    # Save the options
-    cattr_accessor :slugify_options
-    self.slugify_options = options
+    # Define instance methods
+    class_eval <<-EVAL
+      def slugify(force_refresh=false)
+        return if self[:#{options[:from]}].nil?
 
-    # Define #slugify
-    define_method(:slugify) do |*args|
-      force_refresh = args.first || false
-
-      from = self.class.slugify_options[:from]
-      to   = self.class.slugify_options[:to]
-
-      return if self[from].nil?
-
-      self[to] = if self[to].blank? || force_refresh
-        # only process from field if slug is blank
-        self[from].parameterize.to_s
-      else
-        # always parameterize the slug field, in case the user gives invalid input
-        self[to].parameterize.to_s
+        self[:#{options[:to]}] = if self[:#{options[:to]}].blank? || force_refresh
+          # only process from field if slug is blank
+          self[:#{options[:from]}].parameterize.to_s
+        else
+          # always parameterize the slug field, in case the user gives invalid input
+          self[:#{options[:to]}].parameterize.to_s
+        end
       end
-    end
 
-    # Define #slugify!
-    define_method(:slugify!) do
-      slugify(true)
-    end
+      def slugify!
+        slugify(true)
+      end
+    EVAL
+
 
     ##
     # Install validations
-    validates_presence_of self.slugify_options[:to]
-    validates_uniqueness_of self.slugify_options[:to]
-    validates_format_of self.slugify_options[:to], :with => /^[-_+a-z0-9]+$/
+    validates_presence_of   options[:to]
+    validates_uniqueness_of options[:to]
+    validates_format_of     options[:to], :with => /^[-_+a-z0-9]+$/
 
     ##
     # Install filters
     before_validation :slugify
-
-    # slugify after create so that the new id can be set
-    after_create :slugify
   end
 end
 
