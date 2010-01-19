@@ -42,9 +42,9 @@ class Upload < ActiveRecord::Base
   slugify :file_name, :to => :short_name
 end
 
-# with id
+# force
 class Post < ActiveRecord::Base
-  slugify :title, :with_id => true
+  slugify :title, :force => true
 end
 
 # missing columns

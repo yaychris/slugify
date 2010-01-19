@@ -1,12 +1,12 @@
 module Slugify
-  class MissingColumnError < StandardError
-  end
+  class MissingColumnError < StandardError; end
 
   def slugify(from_field = :title, options = {})
     options.symbolize_keys!
     options.reverse_merge!({
-      :from    => from_field,
-      :to      => :slug
+      :from  => from_field,
+      :to    => :slug,
+      :force => false
     })
 
     # Make sure the columns exist
@@ -41,7 +41,11 @@ module Slugify
     validates_format_of     options[:to], :with => /^[-_+a-z0-9]+$/
 
     # Install filters
-    before_validation :slugify
+    if options[:force]
+      before_validation :slugify!
+    else
+      before_validation :slugify
+    end
   end
 end
 

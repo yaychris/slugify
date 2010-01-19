@@ -13,6 +13,7 @@ class TestSlugify < Test::Unit::TestCase
     @page = Page.new :title => "Yay Hooray"
     @user = User.new :name => "Fox Mulder"
     @file = Upload.new :file_name => "hello.jpg"
+    @post = Post.new :title => "Slugify is awesome"
   end
 
   should "have #slugify class method" do
@@ -108,6 +109,18 @@ class TestSlugify < Test::Unit::TestCase
           assert_nothing_raised { @file.slugify(true) }
           assert_equal "hello-jpg", @file.short_name
         end
+      end
+    end
+
+    context "with :force set to true" do
+      should "overwrite an existing slug" do
+        assert @post.valid?
+        assert_equal "slugify-is-awesome", @post.slug
+
+        @post.title = "Hells yeah it is"
+
+        assert @post.valid?
+        assert_equal "hells-yeah-it-is", @post.slug
       end
     end
   end
