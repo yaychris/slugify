@@ -31,6 +31,11 @@ ActiveRecord::Schema.define do
     t.string :slug
   end
 
+  create_table :blog_posts do |t|
+    t.string :title
+    t.string :slug
+  end
+
   create_table :failures do |t|
     t.string :valid_from
     t.string :valid_to
@@ -66,6 +71,11 @@ end
 
 class Section < ActiveRecord::Base
   has_many :pages, :class_name => "ScopedPage"
+end
+
+# turn off unique
+class BlogPost < ActiveRecord::Base
+  slugify :title, :unique => false
 end
 
 # missing columns

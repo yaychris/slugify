@@ -4,10 +4,11 @@ module Slugify
   def slugify(from_field = :title, options = {})
     options.symbolize_keys!
     options.reverse_merge!({
-      :from  => from_field,
-      :to    => :slug,
-      :force => false,
-      :scope => nil
+      :from   => from_field,
+      :to     => :slug,
+      :force  => false,
+      :scope  => nil,
+      :unique => true
     })
 
     # Make sure the columns exist
@@ -39,7 +40,7 @@ module Slugify
 
     # Install validations
     validates_presence_of   options[:to]
-    validates_uniqueness_of options[:to], :scope => options[:scope]
+    validates_uniqueness_of(options[:to], :scope => options[:scope]) if options[:unique]
     validates_format_of     options[:to], :with => /^[-_+a-z0-9]+$/
 
     # Install filters

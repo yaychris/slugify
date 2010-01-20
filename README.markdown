@@ -53,6 +53,11 @@ Slugify will automatically validate for presence, format, and uniqueness. It's e
       slugify :title, :scope => :section_id
     end
 
+or turn the constrain off:
+
+    class BlogPost < ActiveRecord::Base
+      slugify :title, :unique => false
+    end
 
 Include the ID
 --------------

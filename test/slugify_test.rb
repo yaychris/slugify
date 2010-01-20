@@ -137,6 +137,18 @@ class TestSlugify < Test::Unit::TestCase
         assert @page2.save
       end
     end
+
+    context "with :unique set to false" do
+      setup do
+        BlogPost.create :title => "Yay Hooray"
+      end
+
+      should "allow duplicate slugs" do
+        @post = BlogPost.create :title => "Yay Hooray"
+        assert @post.valid?
+        assert @post.save
+      end
+    end
   end
 
   context "calling #slugify! (bang) instance method" do
