@@ -20,6 +20,17 @@ ActiveRecord::Schema.define do
     t.string :slug
   end
 
+  create_table :scoped_pages do |t|
+    t.string  :title
+    t.string  :slug
+    t.integer :section_id
+  end
+
+  create_table :sections do |t|
+    t.string :title
+    t.string :slug
+  end
+
   create_table :failures do |t|
     t.string :valid_from
     t.string :valid_to
@@ -45,6 +56,16 @@ end
 # force
 class Post < ActiveRecord::Base
   slugify :title, :force => true
+end
+
+# scope
+class ScopedPage < ActiveRecord::Base
+  slugify :title, :scope => :section_id
+  belongs_to :section
+end
+
+class Section < ActiveRecord::Base
+  has_many :pages, :class_name => "ScopedPage"
 end
 
 # missing columns

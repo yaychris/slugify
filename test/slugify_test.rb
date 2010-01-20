@@ -123,6 +123,20 @@ class TestSlugify < Test::Unit::TestCase
         assert_equal "hells-yeah-it-is", @post.slug
       end
     end
+
+    context "with :scope set" do
+      setup do
+        @section1 = Section.create :title => "Section 1"
+        @section2 = Section.create :title => "Section 2"
+        @page1    = ScopedPage.create :title => "Page", :section => @section1
+      end
+
+      should "scope the uniqueness validation" do
+        @page2 = ScopedPage.new :title => "Page", :section => @section2
+        assert @page2.valid?
+        assert @page2.save
+      end
+    end
   end
 
   context "calling #slugify! (bang) instance method" do

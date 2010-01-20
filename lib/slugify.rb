@@ -6,7 +6,8 @@ module Slugify
     options.reverse_merge!({
       :from  => from_field,
       :to    => :slug,
-      :force => false
+      :force => false,
+      :scope => nil
     })
 
     # Make sure the columns exist
@@ -17,6 +18,7 @@ module Slugify
     end
 
     # Define instance methods
+    # TODO: automatically uniquify slug?
     class_eval <<-EVAL
       def slugify(force_refresh=false)
         return if self[:#{options[:from]}].nil?
@@ -37,7 +39,7 @@ module Slugify
 
     # Install validations
     validates_presence_of   options[:to]
-    validates_uniqueness_of options[:to]
+    validates_uniqueness_of options[:to], :scope => options[:scope]
     validates_format_of     options[:to], :with => /^[-_+a-z0-9]+$/
 
     # Install filters

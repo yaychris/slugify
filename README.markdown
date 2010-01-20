@@ -47,6 +47,12 @@ or set the option in the DSL:
       slugify :title, :to => :permalink, :force => true
     end
 
+Slugify will automatically validate for presence, format, and uniqueness. It's easy to scope the uniqueness constraint:
+
+    class Page < ActiveRecord::Base
+      slugify :title, :scope => :section_id
+    end
+
 
 Include the ID
 --------------
