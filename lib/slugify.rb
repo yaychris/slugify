@@ -20,7 +20,7 @@ module Slugify
 
     # Define instance methods
     # TODO: automatically uniquify slug?
-    class_eval <<-EVAL
+    class_eval <<-EVAL, __FILE__, __LINE__
       def slugify(force_refresh=false)
         return if self[:#{options[:from]}].nil?
 
